@@ -23,6 +23,24 @@ export default function CurrencyConverter() {
   const [supportedCurrencies, setSupportedCurrencies] = React.useState<string[]>([])
   const [isLoading, setIsLoading] = React.useState(true)
   const [error, setError] = React.useState<string | null>(null)
+  const [mappedCurrencies, setMappedCurrencies] = React.useState<any[]>([])
+
+  // Fetch mapped currencies on component mount
+  React.useEffect(() => {
+    const fetchMappedCurrencies = async () => {
+      try {
+        const response = await fetch('/api/convertable-currencies')
+        const data = await response.json()
+        setMappedCurrencies(data)
+      } catch (err) {
+        console.error(err)
+        setError('Failed to load mapped currencies')
+      }
+    }
+
+    fetchMappedCurrencies()
+  }, [])
+
 
   // Fetch supported currencies on component mount
   React.useEffect(() => {
@@ -40,9 +58,11 @@ export default function CurrencyConverter() {
         setIsLoading(false)
 
       } catch (err) {
+        console.error(err)
         setError('Failed to load supported currencies')
         setIsLoading(false)
       }
+
     }
 
     fetchSupportedCurrencies()
@@ -60,17 +80,20 @@ export default function CurrencyConverter() {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({
-          from: fromCurrency,
-          to: toCurrency,
+          from: mappedCurrencies.find(currency => currency.symbol === fromCurrency)?.id,
+          to: mappedCurrencies.find(currency => currency.symbol === toCurrency)?.id,
           amount: Number(amount)
+
         })
       })
       const data = await response.json()
       setResult(data.result)
     } catch (err) {
+      console.error(err)
       setError('Conversion failed')
     }
   }
+
 
   if (isLoading) {
     return <div className="w-full max-w-md mx-auto p-6">Loading supported currencies...</div>
@@ -88,11 +111,11 @@ export default function CurrencyConverter() {
         <div className="p-4 rounded-lg bg-[#1C1F26] border border-[#2A2D34]">
           <div className="text-sm text-gray-400 mb-1">Converted Amount</div>
           <div className="text-2xl font-semibold text-white">
-            {CURRENCY_SYMBOLS[toCurrency] || ''}{result.toFixed(8)}
+            APP{/* {CURRENCY_SYMBOLS[toCurrency] || ''}{result.toFixed(8)} */}
           </div>
           <div className="text-sm text-gray-400 mt-1">
-            {CURRENCY_SYMBOLS[fromCurrency] || ''}{Number.parseFloat(amount).toFixed(8)} {fromCurrency.toUpperCase()} = {' '}
-            {CURRENCY_SYMBOLS[toCurrency] || ''}{result.toFixed(8)} {toCurrency.toUpperCase()}
+            {/* {CURRENCY_SYMBOLS[fromCurrency] || ''}{Number.parseFloat(amount).toFixed(8)} {fromCurrency.toUpperCase()} = {' '} */}
+            {/* {CURRENCY_SYMBOLS[toCurrency] || ''}{result.toFixed(8)} {toCurrency.toUpperCase()} */}
           </div>
         </div>
       )}
