@@ -12,26 +12,7 @@ import {
 import { Input } from "@/components/ui/input";
 import { ArrowLeftRight } from "lucide-react";
 import SearchableSelect from "./searchableselect";
-
-const CURRENCIES = {
-  USD: { symbol: "$", rate: 1 },
-  EUR: { symbol: "€", rate: 0.92 },
-  GBP: { symbol: "£", rate: 0.79 },
-};
-
-const ASSETS = {
-  BTC: { symbol: "₿", rate: 34000 },
-  ETH: { symbol: "Ξ", rate: 1800 },
-  XAU: { symbol: "XAU", rate: 1950 }, // Gold
-};
-
-type ConversionType = "asset-to-currency" | "currency-to-asset";
-
-interface ApiResponseItem {
-  id: string;
-  symbol: string;
-  name: string;
-}
+import { ConversionType, ApiResponseItem } from "@/types/api";
 
 export default function ConvertCryptoToFiat() {
   const [amount, setAmount] = React.useState("0.00");
@@ -42,54 +23,47 @@ export default function ConvertCryptoToFiat() {
     React.useState<ConversionType>("asset-to-currency");
   const [supportedCurrencies, setSupportedCurrencies] = React.useState<
     string[]
-  >([]);
+  >(["Hey"]);
   const [isLoading, setIsLoading] = React.useState(true);
   const [error, setError] = React.useState<string | null>(null);
   const [supportedCrypto, setSupportedCrypto] = React.useState<
-  Array<ApiResponseItem>
->([]); 
+    Array<ApiResponseItem>
+  >([]);
 
   React.useEffect(() => {
-    const fetchSupportedCrypto = async () => {
+    const fetchData = async () => {
+      setIsLoading(true);
+      setError(null);
+
       try {
-        const response = await fetch("/api/supported-coins");
-        const data = await response.json();
-        if (Array.isArray(data)) {
-          setSupportedCrypto(data);
-        } else {
-          setError("Invalid data format");
+        const [cryptoResponse, currenciesResponse] = await Promise.all([
+          fetch("/api/supported-coins"),
+          fetch("/api/supported-currencies"),
+        ]);
+
+        const cryptoData = await cryptoResponse.json();
+        const currenciesData = await currenciesResponse.json();
+
+        if (!Array.isArray(cryptoData)) {
+          throw new Error("Invalid crypto data format received");
         }
-        setIsLoading(false);
+        if (!Array.isArray(currenciesData)) {
+          throw new Error("Invalid currencies data format received");
+        }
+
+        setSupportedCrypto(cryptoData);
+        setSupportedCurrencies(currenciesData);
       } catch (err) {
-        console.error(err);
-        setError("Failed to load supported crypto");
+        console.error("Data fetching error:", err);
+        setError(
+          err instanceof Error ? err.message : "Failed to load conversion data"
+        );
+      } finally {
         setIsLoading(false);
       }
     };
 
-    fetchSupportedCrypto();
-  }, []);
-
-  React.useEffect(() => {
-    const fetchSupportedCurrencies = async () => {
-      try {
-        const response = await fetch("/api/supported-currencies");
-        const data = await response.json();
-
-        if (Array.isArray(data)) {
-          setSupportedCurrencies(data);
-        } else {
-          setError("Invalid data format");
-        }
-        setIsLoading(false);
-        
-      } catch (err) {
-        console.error(err);
-        setError("Failed to load supported currencies");
-        setIsLoading(false);
-      }
-    };
-    fetchSupportedCurrencies();
+    fetchData();
   }, []);
 
   const handleConvert = async () => {
@@ -148,20 +122,19 @@ export default function ConvertCryptoToFiat() {
   };
 
   const handleSwap = () => {
+    // Store current values before swapping
+    const prevFromType = fromType;
+    const prevToType = toType;
+
+    // Update conversion type
     setConversionType((prev: ConversionType) =>
       prev === "asset-to-currency" ? "currency-to-asset" : "asset-to-currency"
     );
-    setFromType("");
-    setToType("");
-    setResult(null);
-  };
 
-  const getSymbol = (type: string) => {
-    return (
-      ASSETS[type as keyof typeof ASSETS]?.symbol ||
-      CURRENCIES[type as keyof typeof CURRENCIES]?.symbol ||
-      type
-    );
+    // Swap the values
+    setFromType(prevToType);
+    setToType(prevFromType);
+    setResult(null);
   };
 
   if (isLoading) {
@@ -202,14 +175,11 @@ export default function ConvertCryptoToFiat() {
         <div className="p-4 rounded-lg bg-[#1C1F26] border border-[#2A2D34]">
           <div className="text-sm text-gray-400 mb-1">Converted Amount</div>
           <div className="text-xl font-semibold text-white">
-            {getSymbol(toType)}
-            {result.toFixed(6)}
+            {result.toFixed(6)} {toType}
           </div>
           <div className="text-xs text-gray-400 mt-1">
-            {getSymbol(fromType)}
-            {Number.parseFloat(amount).toFixed(6)} {fromType} ={" "}
-            {getSymbol(toType)}
-            {result.toFixed(6)} {toType}
+            {fromType} {Number.parseFloat(amount).toFixed(6)} = {toType}{" "}
+            {result.toFixed(6)}
           </div>
         </div>
       )}
@@ -218,64 +188,61 @@ export default function ConvertCryptoToFiat() {
         <Input
           type="number"
           value={amount}
+          min={0}
           onChange={(e) => setAmount(e.target.value)}
           className="bg-[#1C1F26] border-[#2A2D34] text-white"
         />
 
+        {/* From */}
         <div className="space-y-3">
           <div className="text-sm text-gray-400">From</div>
-          <SearchableSelect
-            value={fromType}
-            onValueChange={setFromType}
-            items={supportedCrypto}
-            placeholder="Select coin"
-          />
-        </div>
-
-        <div className="space-y-1">
-          <div className="text-sm text-gray-400">From</div>
-          <Select value={fromType} onValueChange={setFromType}>
-            <SelectTrigger className="w-full bg-[#1C1F26] border-[#2A2D34] text-white">
-              {conversionType === "asset-to-currency" ? (
-                <SelectValue placeholder="Select coin" />
-              ) : (
+          {conversionType === "asset-to-currency" ? (
+            <SearchableSelect
+              value={fromType}
+              onValueChange={setFromType}
+              items={supportedCrypto}
+              placeholder="Select coin"
+            />
+          ) : (
+            <Select defaultValue={fromType} onValueChange={setFromType}>
+              <SelectTrigger className="w-full bg-[#1C1F26] border-[#2A2D34] text-white">
                 <SelectValue placeholder="Select currency" />
-              )}
-            </SelectTrigger>
-            <SelectContent>
-              {(conversionType === "asset-to-currency"
-                ? Object.keys(ASSETS)
-                : supportedCurrencies
-              ).map((key) => (
-                <SelectItem key={key} value={key}>
-                  {key.toUpperCase()}
-                </SelectItem>
-              ))}
-            </SelectContent>
-          </Select>
+              </SelectTrigger>
+              <SelectContent>
+                {supportedCurrencies.map((currency) => (
+                  <SelectItem key={currency} value={currency}>
+                    {currency.toUpperCase()}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+          )}
         </div>
 
-        <div className="space-y-1">
+        {/* TO */}
+        <div className="space-y-3">
           <div className="text-sm text-gray-400">To</div>
-          <Select value={toType} onValueChange={setToType}>
-            <SelectTrigger className="w-full bg-[#1C1F26] border-[#2A2D34] text-white">
-              {conversionType === "asset-to-currency" ? (
+          {conversionType === "currency-to-asset" ? (
+            <SearchableSelect
+              value={toType}
+              onValueChange={setToType}
+              items={supportedCrypto}
+              placeholder="Select coin"
+            />
+          ) : (
+            <Select defaultValue={toType} onValueChange={setToType}>
+              <SelectTrigger className="w-full bg-[#1C1F26] border-[#2A2D34] text-white">
                 <SelectValue placeholder="Select currency" />
-              ) : (
-                <SelectValue placeholder="Select coin" />
-              )}
-            </SelectTrigger>
-            <SelectContent>
-              {(conversionType === "currency-to-asset"
-                ? Object.keys(ASSETS)
-                : supportedCurrencies
-              ).map((key) => (
-                <SelectItem key={key} value={key}>
-                  {key.toUpperCase()}
-                </SelectItem>
-              ))}
-            </SelectContent>
-          </Select>
+              </SelectTrigger>
+              <SelectContent>
+                {supportedCurrencies.map((currency) => (
+                  <SelectItem key={currency} value={currency}>
+                    {currency.toUpperCase()}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+          )}
         </div>
       </div>
 
