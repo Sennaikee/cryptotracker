@@ -8,11 +8,15 @@ export async function GET() {
     const response = await fetch(endpoint, {
       headers: {
         accept: "application/json",
-      }
+      },
     });
     const data = await response.json();
     return NextResponse.json(data);
   } catch (error) {
-    return NextResponse.json({ error: "Failed to fetch data" }, { status: 500 });
+    console.error(error);
+    return NextResponse.json(
+      { error: "Failed to fetch data" },
+      { status: 500 }
+    );
   }
 }
