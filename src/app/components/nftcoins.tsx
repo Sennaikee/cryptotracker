@@ -2,44 +2,43 @@
 import React, { useEffect, useState } from "react";
 import { TrendingUp, TrendingDown } from "lucide-react";
 
-
 export default function NFTCoins() {
-    const [coins, setCoins] = useState([]);
-    const [isLoading, setIsLoading] = useState(true);
-    const [error, setError] = useState<string | null>(null);
+  const [coins, setCoins] = useState([]);
+  const [isLoading, setIsLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
 
-  
-    useEffect(() => {
-      async function getData() {
-        try {
-          const response = await fetch("/api/fetchtopnftcoins");  
-          const data = await response.json();
-          setCoins(data);
-          setIsLoading(false);
-        } catch (error) {
+  useEffect(() => {
+    async function getData() {
+      try {
+        const response = await fetch("/api/fetchtopnftcoins");
+        const data = await response.json();
+        setCoins(data);
+        setIsLoading(false);
+      } catch (error) {
+        console.error(error);
+        setError("Failed to load data");
+        setIsLoading(false);
+      }
+    }
+    getData();
+  }, []);
 
-          setError("Failed to load data");
-          setIsLoading(false);
-        }
-      }
-      getData();
-    }, []);
-  
-    const renderContent = () => {
-      if (isLoading) {
-        return <div className="text-center py-8">Loading...</div>;
-      }
-      if (error) {
-        return (
-          <div className="text-center py-8 text-red-500">
-            Error loading data. Please try again later.
-          </div>
-        );
-      }
-      if (coins?.length === 0) {
-        return <div className="text-center py-8">No coins found.</div>;
-      }
-      return coins?.map((coin: {
+  const renderContent = () => {
+    if (isLoading) {
+      return <div className="text-center py-8">Loading...</div>;
+    }
+    if (error) {
+      return (
+        <div className="text-center py-8 text-red-500">
+          Error loading data. Please try again later.
+        </div>
+      );
+    }
+    if (coins?.length === 0) {
+      return <div className="text-center py-8">No coins found.</div>;
+    }
+    return coins?.map(
+      (coin: {
         id: string;
         price_change_percentage_24h: number;
         name: string;
@@ -76,7 +75,6 @@ export default function NFTCoins() {
                   : coin.price_change_percentage_24h.toFixed(2)}
                 %
               </h4>
-  
             ) : (
               <h4 className="text-red-500">
                 {coin.price_change_percentage_24h < 0.001
@@ -87,11 +85,9 @@ export default function NFTCoins() {
             )}
           </div>
         </div>
-      ));
-    };
-  
-    return (
-      <div className="max-w-5xl mx-auto mt-6 p-4">{renderContent()}</div>
+      )
     );
-  }
-  
+  };
+
+  return <div className="max-w-5xl mx-auto mt-6 p-4">{renderContent()}</div>;
+}

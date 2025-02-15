@@ -15,6 +15,7 @@ export default function DeFiCoins() {
         setCoins(data);
         setIsLoading(false);
       } catch (error) {
+        console.error(error);
         setError("Failed to load data");
         setIsLoading(false);
       }

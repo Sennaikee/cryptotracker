@@ -4,16 +4,7 @@ import * as React from "react"
 import { Button } from "@/components/ui/button"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { Input } from "@/components/ui/input"
-
-// We'll move the exchange rates to the API later
-const CURRENCY_SYMBOLS: { [key: string]: string } = {
-    usd: "$",
-    eur: "€",
-    gbp: "£",
-    btc: "₿",
-    eth: "Ξ",
-    // Add more symbols as needed
-  }
+import { ApiResponseItem } from "@/types/api"
 
 export default function CurrencyConverter() {
   const [amount, setAmount] = React.useState("0.00")
@@ -23,7 +14,7 @@ export default function CurrencyConverter() {
   const [supportedCurrencies, setSupportedCurrencies] = React.useState<string[]>([])
   const [isLoading, setIsLoading] = React.useState(true)
   const [error, setError] = React.useState<string | null>(null)
-  const [mappedCurrencies, setMappedCurrencies] = React.useState<any[]>([])
+  const [mappedCurrencies, setMappedCurrencies] = React.useState<ApiResponseItem[]>([])
 
   // Fetch mapped currencies on component mount
   React.useEffect(() => {
