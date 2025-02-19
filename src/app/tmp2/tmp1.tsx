@@ -9,12 +9,11 @@ import {
   Twitter,
   Facebook,
   ExternalLink,
-  // ChevronDown,
+  ChevronDown,
 } from "lucide-react";
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Button } from "@/components/ui/button";
-import { Skeleton } from "@/components/ui/skeleton";
-import SideBarLoading from "../coins/[slug]/components/sidebarloading";
+
 export default function CryptoTracker() {
   const [timeRange, setTimeRange] = useState("24h");
 
@@ -24,7 +23,7 @@ export default function CryptoTracker() {
         {/* Left Sidebar */}
         <div className="w-[400px] border-r border-gray-800 p-6 space-y-6">
           <div className="space-y-1">
-            {/* <div className="text-sm text-gray-400">
+            <div className="text-sm text-gray-400">
               <span className="hover:text-white cursor-pointer">
                 Cryptocurrencies
               </span>
@@ -32,7 +31,7 @@ export default function CryptoTracker() {
               <span className="hover:text-white cursor-pointer">
                 Bitcoin Price
               </span>
-            </div> */}
+            </div>
 
             <div className="flex items-center gap-2 mt-4">
               <Bitcoin className="w-8 h-8 text-[#f7931a]" />
@@ -52,9 +51,9 @@ export default function CryptoTracker() {
               </div>
             </div>
 
-            {/* <div className="text-sm text-gray-400 mt-2">
+            <div className="text-sm text-gray-400 mt-2">
               1.0000 BTC <span className="text-[#00ff88]">↑ 0.0%</span>
-            </div> */}
+            </div>
 
             <div className="flex justify-between text-sm text-gray-400 mt-2">
               <span>$96,353.28</span>
@@ -62,10 +61,10 @@ export default function CryptoTracker() {
               <span>$98,623.62</span>
             </div>
 
-            {/* <Button variant="outline" className="w-full mt-4 text-gray-400">
+            <Button variant="outline" className="w-full mt-4 text-gray-400">
               <Star className="w-4 h-4 mr-2" />
               Add to Portfolio • 1,925,519 added
-            </Button> */}
+            </Button>
           </div>
 
           {/* Market Stats */}
@@ -107,21 +106,21 @@ export default function CryptoTracker() {
               </Button>
             </div>
 
-            {/* <div className="flex justify-between items-center">
+            <div className="flex justify-between items-center">
               <span>Explorers</span>
               <Button variant="ghost" size="sm">
                 Mempool
                 <ChevronDown className="w-4 h-4 ml-2" />
               </Button>
-            </div> */}
+            </div>
 
-            {/* <div className="flex justify-between items-center">
+            <div className="flex justify-between items-center">
               <span>Wallets</span>
               <Button variant="ghost" size="sm">
                 Ledger
                 <ChevronDown className="w-4 h-4 ml-2" />
               </Button>
-            </div> */}
+            </div>
 
             <div>
               <h3 className="text-lg mb-2">Community</h3>
@@ -137,81 +136,6 @@ export default function CryptoTracker() {
                 <Button variant="secondary" size="sm">
                   bitcointalk.org
                 </Button>
-              </div>
-            </div>
-          </div>
-        </div>
-        <SideBarLoading />
-
-        {/* Loading sidebar */}
-        <div className="w-[400px] border-r border-gray-800 p-6 space-y-6">
-          <div className="space-y-1">
-            <div className="text-sm text-gray-400">
-              <Skeleton className="h-4 w-32 bg-gray-800" />
-            </div>
-
-            <div className="flex items-center gap-2 mt-4">
-              <Bitcoin className="w-8 h-8 text-[#f7931a]" />
-              <span className="text-xl">Bitcoin</span>
-              <span className="text-gray-400">BTC</span>
-              <Skeleton className="h-5 w-16 bg-gray-800" />
-            </div>
-
-            <div className="mt-4">
-              <Skeleton className="h-10 w-48 bg-gray-800" />
-              <div className="flex items-center gap-2 mt-2">
-                <Skeleton className="h-4 w-16 bg-gray-800" />
-              </div>
-            </div>
-
-            <div className="flex justify-between text-sm mt-4">
-              <Skeleton className="h-4 w-24 bg-gray-800" />
-              <Skeleton className="h-4 w-24 bg-gray-800" />
-              <Skeleton className="h-4 w-24 bg-gray-800" />
-            </div>
-
-            <Button
-              variant="outline"
-              className="w-full mt-4 text-gray-400"
-              disabled
-            >
-              <Star className="w-4 h-4 mr-2" />
-              <Skeleton className="h-4 w-48 bg-gray-800" />
-            </Button>
-          </div>
-
-          {/* Market Stats */}
-          <div className="space-y-4">
-            {[...Array(3)].map((_, i) => (
-              <div key={i} className="flex justify-between items-center">
-                <Skeleton className="h-4 w-32 bg-gray-800" />
-                <Skeleton className="h-4 w-40 bg-gray-800" />
-              </div>
-            ))}
-          </div>
-
-          {/* Links Section */}
-          <div className="space-y-4">
-            <Skeleton className="h-6 w-16 bg-gray-800" />
-            <div className="flex gap-2">
-              {[...Array(2)].map((_, i) => (
-                <Skeleton key={i} className="h-8 w-24 bg-gray-800" />
-              ))}
-            </div>
-
-            {[...Array(2)].map((_, i) => (
-              <div key={i} className="flex justify-between items-center">
-                <Skeleton className="h-4 w-20 bg-gray-800" />
-                <Skeleton className="h-8 w-32 bg-gray-800" />
-              </div>
-            ))}
-
-            <div>
-              <Skeleton className="h-6 w-24 mb-2 bg-gray-800" />
-              <div className="flex gap-2">
-                {[...Array(3)].map((_, i) => (
-                  <Skeleton key={i} className="h-8 w-28 bg-gray-800" />
-                ))}
               </div>
             </div>
           </div>
