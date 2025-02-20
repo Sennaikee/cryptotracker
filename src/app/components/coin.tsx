@@ -1,4 +1,4 @@
-import CoinProps from "@/types/coindata";
+import { CoinProps } from "@/types/coindata";
 import { TrendingUp, TrendingDown } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";

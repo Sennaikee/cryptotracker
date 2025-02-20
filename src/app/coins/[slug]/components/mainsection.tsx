@@ -5,7 +5,6 @@ import React, { useState } from "react";
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Button } from "@/components/ui/button";
 import Chart from "./chart";
-import MarketCapChart from "./marketcapchart";
 import { getUnixTimeRange } from "@/app/lib/calculateunixtime";
 import { TimeRange } from "@/types/time";
 
