@@ -16,48 +16,6 @@ export default function CurrencyConverter() {
   const [error, setError] = React.useState<string | null>(null)
   const [mappedCurrencies, setMappedCurrencies] = React.useState<ApiResponseItem[]>([])
 
-  // Fetch mapped currencies on component mount
-  React.useEffect(() => {
-    const fetchMappedCurrencies = async () => {
-      try {
-        const response = await fetch('/api/convertable-currencies')
-        const data = await response.json()
-        setMappedCurrencies(data)
-      } catch (err) {
-        console.error(err)
-        setError('Failed to load mapped currencies')
-      }
-    }
-
-    fetchMappedCurrencies()
-  }, [])
-
-
-  // Fetch supported currencies on component mount
-  React.useEffect(() => {
-    async function fetchSupportedCurrencies() {
-      try {
-        const response = await fetch('/api/supported-currencies')
-        const data = await response.json()
-
-        // Ensure data is an array of strings
-        if (Array.isArray(data)) {
-          setSupportedCurrencies(data)
-        } else {
-          setError('Invalid data format')
-        }
-        setIsLoading(false)
-
-      } catch (err) {
-        console.error(err)
-        setError('Failed to load supported currencies')
-        setIsLoading(false)
-      }
-
-    }
-
-    fetchSupportedCurrencies()
-  }, [])
 
   const handleConvert = async () => {
     if (!fromCurrency || !toCurrency || !amount) {

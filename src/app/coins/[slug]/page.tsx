@@ -8,23 +8,30 @@ export default async function Page({
   params,
 }: Readonly<{ params: { slug: string } }>) {
   const apiKey = process.env.API_KEY;
-  const endPoint = `https://api.coingecko.com/api/v3/coins/${params.slug}?localization=false&tickers=true&market_data=true&community_data=true&developer_data=true&sparkline=true&x_cg_demo_api_key=${apiKey}`;
-
-  const fetchData = async (): Promise<CoinDataProps> => {
+  
+  // First, await the params object
+  const resolvedParams = await params;
+  const slug = resolvedParams.slug;
+  
+  const fetchData = async (coinSlug: string): Promise<CoinDataProps> => {
+    const endPoint = `https://api.coingecko.com/api/v3/coins/${coinSlug}?localization=false&tickers=true&market_data=true&community_data=true&developer_data=true&sparkline=true&x_cg_demo_api_key=${apiKey}`;
+    
     const response = await fetch(endPoint, {
       next: {
         revalidate: 300,
       },
     });
+    
     if (!response.ok) {
       throw new Error(`API responded with status: ${response.status}`);
     }
-    const data = await response.json();
-    return data;
+    
+    return await response.json();
   };
 
-  const coinData = await fetchData();
-
+  // Use the resolved slug
+  const coinData = await fetchData(slug);
+  
   return (
     <div className="flex">
       <Suspense fallback={<SideBarLoading />}>

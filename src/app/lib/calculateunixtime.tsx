@@ -23,6 +23,8 @@ function getUnixTimeRange(timeRange: TimeRange) {
     return { startTime: startTime, endTime: now };
 }
 
+export { getUnixTimeRange };
+
 // Example usage:
 // console.log(getUnixTimeRange("1h")); // { startTime: 1707052800, endTime: 1707056400 }
 // console.log(getUnixTimeRange("7d")); // { startTime: 1706448000, endTime: 1707052800 }

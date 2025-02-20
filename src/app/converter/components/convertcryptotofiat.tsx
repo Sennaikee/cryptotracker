@@ -14,6 +14,8 @@ import { ArrowLeftRight } from "lucide-react";
 import SearchableSelect from "./searchableselect";
 import { ConversionType, ApiResponseItem } from "@/types/api";
 
+// TODO: Fix this part to accept the props and show loading and error features
+
 export default function ConvertCryptoToFiat() {
   const [amount, setAmount] = React.useState("0.00");
   const [fromType, setFromType] = React.useState<string>("");

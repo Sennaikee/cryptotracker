@@ -164,4 +164,16 @@ interface CoinDataProps {
   }[];
 }
 
-export type { CoinProps, CoinDataProps };
+interface CoinChartPrice {
+  date: string; price: number;
+}
+
+interface CoinChartVolume {
+  date: string; volume: number;
+}
+
+interface CoinChartMarketCap {
+  date: string; marketcap: number;
+}
+
+export type { CoinProps, CoinDataProps, CoinChartMarketCap, CoinChartPrice, CoinChartVolume };
