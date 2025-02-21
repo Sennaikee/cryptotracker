@@ -6,11 +6,13 @@ import MainSection from "./components/mainsection";
 
 export default async function Page({
   params,
-}: Readonly<{ params: { slug: string } }>) {
+}: {
+  params: Promise<{ slug: string }>;
+}) {
   const apiKey = process.env.API_KEY;
 
   // First, await the params object
-  const resolvedParams = params;
+  const resolvedParams = await params;
   const slug = resolvedParams.slug;
 
   const fetchData = async (coinSlug: string): Promise<CoinDataProps> => {
