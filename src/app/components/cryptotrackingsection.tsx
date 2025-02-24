@@ -13,8 +13,9 @@ export default function CryptoTrackingSection() {
           Crypto Tracking Section
         </h1>
         
+        <div className="max-w-5xl mx-auto mt-6 px-4">
         <Tabs defaultValue="cryptocurrencies" className="max-w-5xl mx-auto mt-6">
-          <TabsList className="grid grid-cols-4 w-full">
+          <TabsList className="grid grid-cols-2 md:grid-cols-4 w-full gap-2">
             <TabsTrigger value="cryptocurrencies">
               Top Cryptocurrencies
             </TabsTrigger>
@@ -39,6 +40,7 @@ export default function CryptoTrackingSection() {
             <YieldFarming />
           </TabsContent>
         </Tabs>
+        </div>
       </div>
     </div>
   );

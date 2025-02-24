@@ -27,7 +27,7 @@ export default function Coin({ coin }: Readonly<{ coin: CoinProps }>) {
           </p>
         </div>
       </Link>
-      <div className="text-right">
+      <div className="text-right m-1">
         <span className="font-medium">
           ${coin.current_price.toLocaleString()}
         </span>

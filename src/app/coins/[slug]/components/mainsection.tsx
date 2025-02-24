@@ -54,45 +54,46 @@ export default function MainSection({
         </div>
 
         {/* Chart Controls */}
-        <div className="flex justify-between items-center">
-          <div className="flex gap-2">
-            <Button
-              className={
-                chartType === "price"
-                  ? "bg-slate-400 text-black"
-                  : "bg-slate-200 text-gray-600 hover:bg-slate-300"
-              }
-              variant={chartType === "price" ? "secondary" : "ghost"}
-              size="sm"
-              onClick={() => setChartType("price")}
-            >
-              Price
-            </Button>
-            <Button
-              className={
-                chartType === "marketcap"
-                  ? "bg-slate-400 text-black"
-                  : "bg-slate-200 text-gray-600 hover:bg-slate-300"
-              }
-              variant={chartType === "marketcap" ? "secondary" : "ghost"}
-              size="sm"
-              onClick={() => setChartType("marketcap")}
-            >
-              Market Cap
-            </Button>
-            <Button
-              className={
-                chartType === "volume"
-                  ? "bg-slate-400 text-black"
-                  : "bg-slate-200 text-gray-600 hover:bg-slate-300"
-              }
-              variant={chartType === "volume" ? "secondary" : "ghost"}
-              size="sm"
-              onClick={() => setChartType("volume")}
-            >
-              Volume
-            </Button>
-            {/* <Button
+        <div className="grid grid-cols-1 md:grid-cols-2 justify-between items-center">
+          <div className="flex m-2">
+            <div className="flex gap-2">
+              <Button
+                className={
+                  chartType === "price"
+                    ? "bg-slate-400 text-black"
+                    : "bg-slate-200 text-gray-600 hover:bg-slate-300"
+                }
+                variant={chartType === "price" ? "secondary" : "ghost"}
+                size="sm"
+                onClick={() => setChartType("price")}
+              >
+                Price
+              </Button>
+              <Button
+                className={
+                  chartType === "marketcap"
+                    ? "bg-slate-400 text-black"
+                    : "bg-slate-200 text-gray-600 hover:bg-slate-300"
+                }
+                variant={chartType === "marketcap" ? "secondary" : "ghost"}
+                size="sm"
+                onClick={() => setChartType("marketcap")}
+              >
+                Market Cap
+              </Button>
+              <Button
+                className={
+                  chartType === "volume"
+                    ? "bg-slate-400 text-black"
+                    : "bg-slate-200 text-gray-600 hover:bg-slate-300"
+                }
+                variant={chartType === "volume" ? "secondary" : "ghost"}
+                size="sm"
+                onClick={() => setChartType("volume")}
+              >
+                Volume
+              </Button>
+              {/* <Button
               className={
                 chartType === "tradingview"
                   ? "bg-slate-400 text-black"
@@ -104,30 +105,51 @@ export default function MainSection({
             >
               TradingView
             </Button> */}
+            </div>
           </div>
-          <div className="flex gap-2">
-          {timeRanges.map((range) => (
-  <Button
-    key={range}
-    className={
-      timeRange === range
-        ? "bg-slate-400 text-black"
-        : "bg-slate-200 text-gray-600 hover:bg-slate-300"
-    }
-    variant={timeRange === range ? "secondary" : "ghost"}
-    size="sm"
-    onClick={() => setTimeRange(range)}
-  >
-    {range}
-  </Button>
-))}
+          <div className="flex m-2">
+            <div className="flex gap-2">
+              {timeRanges.map((range) => (
+                <Button
+                  key={range}
+                  className={
+                    timeRange === range
+                      ? "bg-slate-400 text-black"
+                      : "bg-slate-200 text-gray-600 hover:bg-slate-300"
+                  }
+                  variant={timeRange === range ? "secondary" : "ghost"}
+                  size="sm"
+                  onClick={() => setTimeRange(range)}
+                >
+                  {range}
+                </Button>
+              ))}
+            </div>
           </div>
         </div>
 
         {/* Conditional Chart Rendering */}
-        {chartType === "price" && <Chart coinid={coin.id} chartType={chartType} timeRange={getUnixTimeRange(timeRange)} />}
-        {chartType === "marketcap" && <Chart coinid={coin.id} chartType={chartType } timeRange={getUnixTimeRange(timeRange)} />}
-        {chartType === "volume" && <Chart coinid={coin.id} chartType={chartType} timeRange={getUnixTimeRange(timeRange)} />}
+        {chartType === "price" && (
+          <Chart
+            coinid={coin.id}
+            chartType={chartType}
+            timeRange={getUnixTimeRange(timeRange)}
+          />
+        )}
+        {chartType === "marketcap" && (
+          <Chart
+            coinid={coin.id}
+            chartType={chartType}
+            timeRange={getUnixTimeRange(timeRange)}
+          />
+        )}
+        {chartType === "volume" && (
+          <Chart
+            coinid={coin.id}
+            chartType={chartType}
+            timeRange={getUnixTimeRange(timeRange)}
+          />
+        )}
         {chartType === "tradingview" && (
           <div className="h-96 bg-slate-100 rounded-lg flex items-center justify-center">
             <p className="text-gray-500">TradingView chart would load here</p>

@@ -35,13 +35,19 @@ export default async function Page({
   const coinData = await fetchData(slug);
 
   return (
-    <div className="flex">
-      <Suspense fallback={<SideBarLoading />}>
-        <Sidebar coin={coinData} />
-      </Suspense>
-      <Suspense>
-        <MainSection coin={coinData} />
-      </Suspense>
+    <div className="container mx-auto px-4 max-w-6xl">
+      <div className="grid grid-cols-1 xl:grid-cols-3">
+        <div className="col-span-1">
+          <Suspense fallback={<SideBarLoading />}>
+            <Sidebar coin={coinData} />
+          </Suspense>
+        </div>
+        <div className="col-span-2">
+          <Suspense>
+            <MainSection coin={coinData} />
+          </Suspense>
+        </div>
+      </div>
     </div>
   );
 }

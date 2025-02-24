@@ -7,7 +7,7 @@ import Link from "next/link";
 
 export default function Sidebar({ coin }: Readonly<{ coin: CoinDataProps }>) {
   return (
-    <div className="min-w-96 border-r border-gray-300 p-6 space-y-6">
+    <div className="min-w-96 xl:border-r border-gray-300 p-6 space-y-6">
       <div className="space-y-1">
         <div className="flex items-center gap-2 mt-4">
           <Image
