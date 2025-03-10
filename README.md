@@ -1,4 +1,6 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Crypto Tracker: A Support Environment for Cryptocurrency Data.
+
+This project is built as a support environment that helps users get information on cryptocurrencies, view trends on the prices of the cryptocurrency tokens, and carry out multiple conversions: from crypto to crypto and crypto to fiat. Users can also fetch information like the top cryptocurrency tokens, top NFT tokens, Decentralised Finance tokens and top yield farming tokens within a period.
 
 ## Getting Started
 First, clone this repository to your local machine: 
@@ -26,7 +28,7 @@ Open [http://localhost:3000](http://localhost:3000) with your browser to see the
 ## Code Structure
 
 ### Main Page
-layout.tsx: The project layout. Contains the <HomeHeader /> component which renders the header(project title and converter button).
+<strong> layout.tsx </strong>: The project layout. Contains the <HomeHeader /> component which renders the header(project title and converter button).
 ```tsx
 export default function RootLayout({
   children,
@@ -46,15 +48,36 @@ export default function RootLayout({
 }
 ```
 
-Entrypoint (/src/app/page.tsx): This contains the 
+<strong> Entrypoint (/src/app/page.tsx) </strong>: This contains the hero section and the Crypto Tracking section
 ```tsx
 <div>
     <HeroSection/>
     <CryptoTrackingSection/>
 </div>
 ```
-Hero Section: Contains the project's hero
-CryptoTrackingSection: Contains a tab which reroutes the user to one of the following tabs: 
+<strong>Hero Section </strong>: Contains the project's hero.
+```tsx
+export default function HeroSection() {
+  return (
+    <div>
+        <div className="relative h-[300px] overflow-hidden">
+        <Image
+          src={'/bitcoin.jpg'}
+          alt="Bitcoin illustration"
+          fill
+          className="object-cover"
+        />
+        <div className="absolute inset-0 bg-black/50 flex flex-col items-center justify-center text-center p-4">
+          <h2 className="text-4xl font-bold text-white mb-2">Track the top cryptocurrencies</h2>
+          <p className="text-gray-200">Find new coins and track your favorites with prices, market cap, and more.</p>
+        </div>
+      </div>
+    </div>
+  )
+}
+```
+
+<strong>CryptoTrackingSection </strong>: Contains a tab which reroutes the user to one of the following tabs: 
 ```tsx
 <TabsList className="grid grid-cols-2 md:grid-cols-4 w-full gap-2">
     <TabsTrigger value="cryptocurrencies">
@@ -65,8 +88,9 @@ CryptoTrackingSection: Contains a tab which reroutes the user to one of the foll
     <TabsTrigger value="yield">Top Yield Farming</TabsTrigger>
 </TabsList>
 ```
-
-Routes:
+<br>
+<strong>Routes: </strong> 
+<br>
 1.Top Cryptocurrencies: This calls the '/api/fetchtopcrypto' entrypoint of the CoinGecko API, saves the top 20 cryptocurrencies to state and renders the result.
 
 2. Top NFT coins: This calls the '/api/fetchtopnftcoins' entrypoint of the CoinGecko API, saves the top 20 NFT coins to state and renders the result.
@@ -77,7 +101,7 @@ Routes:
 
 
 ### Converter
-src/converter/components.page.tsx: Renders the cards for crypto-to-fiat and crypto-crypto conversion
+<strong>src/converter/components.page.tsx</strong>: Renders the cards for crypto-to-fiat and crypto-crypto conversion
 ```tsx
   return (
     <div className="min-h-screen flex items-center justify-center p-4">
@@ -94,7 +118,9 @@ src/converter/components.page.tsx: Renders the cards for crypto-to-fiat and cryp
     </div>
   );
 ```
-[ConvertCryptoToFiat component]('src\app\converter\components\convertcryptotofiat.tsx'): handles the conversion of crypto to fiat and fiat to crypto with the following method: 
+<br>
+
+<strong> ConvertCryptoToFiat component </strong>: handles the conversion of crypto to fiat and fiat to crypto with the following method: 
 ```tsx
 const handleConvert = async () => {
     if (!fromType || !toType || !amount) {
@@ -152,7 +178,7 @@ const handleConvert = async () => {
   };
 ```
 
-[ConvertCryptoToCrypto Componnt]('src\app\converter\components\convertcryptotocrypto.tsx'): Handles converting from one cryptocurrency to another: 
+<strong> ConvertCryptoToCrypto Component </strong>: Handles converting from one cryptocurrency to another: 
 ```tsx
   const handleConvert = async () => {
     if (!fromCrypto || !toCrypto || !amount) {
