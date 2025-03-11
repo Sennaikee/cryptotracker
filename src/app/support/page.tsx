@@ -9,7 +9,7 @@ export default function SupportForm() {
     message: ''
   });
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const [submissionStatus, setSubmissionStatus] = useState(null);
+  const [submissionStatus, setSubmissionStatus] = useState<string>("");
 
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
@@ -18,7 +18,7 @@ export default function SupportForm() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     setIsSubmitting(true);
-    setSubmissionStatus(null);
+    setSubmissionStatus("");
 
     try {
       const response = await fetch('api/send-email', {
@@ -36,7 +36,7 @@ export default function SupportForm() {
         setSubmissionStatus('error');
       }
     } catch (error) {
-      setSubmissionStatus('error');
+      setSubmissionStatus(String(error));
     } finally {
       setIsSubmitting(false);
     }
