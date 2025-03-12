@@ -12,201 +12,191 @@ const FaqPage = () => {
 
     const data = [
         {
-            question: "What is Zoid?",
+            question: "What is cryptocurrency and how does it work?",
             answer: (
                 <p>
-                    Zoid is a digital platform designed to enhance lifestyle experiences
-                    by providing secure visitor access control, seamless bill payments,
-                    data top-ups, and more. It brings together a secure and hassle-free
-                    way of living within the Zoidverse.
+                   Cryptocurrency is a digital or virtual currency that uses cryptography for security. 
+                   It operates on decentralized networks based on blockchain technology, allowing secure, 
+                   transparent, and tamper-proof transactions.  
+
                 </p>
             ),
         },
         {
-            question: "How does Zoid's visitor access control work?",
+            question: "What are the most popular cryptocurrencies?",
             answer: (
                 <p>
-                    Zoid`&apos;`s visitor access control feature allows residents to manage and
-                    monitor visitor entry, adding an extra layer of security to their
-                    homes. You can grant or deny access, ensuring only authorized visitors
-                    can enter.
+                   Some of the most well-known cryptocurrencies include Bitcoin (BTC), 
+                   Ethereum (ETH), Binance Coin (BNB), Cardano (ADA), Solana (SOL), and Ripple (XRP).  
                 </p>
             ),
         },
         {
-            question: "What features are included in the Zoidverse?",
+            question: "What is currency comversion?",
             answer: (
                 <p>
-                    The Zoidverse includes bill payment options, data and airtime top-ups,
-                    shopping through Zoidinc, home listings via Zest, and a range of
-                    lifestyle management features, all accessible from a single platform.
+                    ThCurrency conversion is the process of exchanging one country’s currency 
+                    for another based on exchange rates. It is commonly done for travel, international trade, 
+                    or investment purposes.  
                 </p>
             ),
         },
         {
-            question: " Can I pay my utility bills through Zoid?",
+            question: "How are currency exchange rates determined",
             answer: (
                 <p>
-                    Yes, Zoid offers a convenient bill payment feature that lets you pay
-                    utilities, internet, and other services directly through the app.
+                   Exchange rates fluctuate based on supply and demand, economic conditions, inflation, 
+                   interest rates, and geopolitical factors. Central banks and financial markets play a 
+                   significant role in setting rates.  
                 </p>
             ),
         },
         {
-            question: "What is Zoidinc?",
+            question: "What is the difference between the buy and sell rate in currency exchange?",
             answer: (
                 <p>
-                    Zoidinc is the shopping feature within Zoid, where you can explore and
-                    purchase various products, making it easy to manage your household
-                    shopping needs from one place.
+                    -The <strong>buy rate</strong> is the price a currency exchange service is willing to pay for your currency.  
+                    - The <strong>sell rate</strong> is the price at which they will sell you a foreign currency.  
+                    The difference between the two is called the <strong>exchange spread</strong> and represents the service provider’s profit.  
                 </p>
             ),
         },
         {
-            question: "What is Zest, and how does it work?",
+            question: "How can I get the best exchange rate?",
             answer: (
                 <p>
-                    Zest is Zoid`&apos;`s real estate feature that allows users to find homes or
-                    list properties for sale or lease. You can browse listings or put up
-                    your property within the Zoidverse for others to view.
+                   To get the best rate, compare rates across banks, online forex platforms, 
+                   and currency exchange services. Avoid exchanging currency at airports, 
+                   as they often have higher fees and poor rates.  
                 </p>
             ),
         },
         {
-            question: "Is there a referral program for Zoid?",
+            question: "Can I exchange money online?",
             answer: (
                 <p>
-                    Yes, Zoid offers a `&apos;`Refer and Earn`&apos;` program. When you refer friends to
-                    sign up on Zoid, you earn rewards as they join and start using the
-                    platform.
+                    Yes, many online platforms allow you to convert currencies digitally,
+                     including Wise (formerly TransferWise), PayPal, Revolut, and online banking services.  
                 </p>
             ),
         },
         {
-            question: "How do I top up my mobile data or airtime on Zoid?",
+            question: "How do I convert cryptocurrency to fiat currency (USD, EUR, etc.)?",
             answer: (
                 <p>
-                    Simply go to the top-up section in the app, select your preferred
-                    amount, and follow the prompts to instantly top up your data or
-                    airtime.
+                   You can convert crypto to fiat using a cryptocurrency exchange, a peer-to-peer (P2P) platform, or crypto ATMs. 
+                   Simply select the cryptocurrency, input the amount, and choose your preferred withdrawal method.  
                 </p>
             ),
         },
         {
-            question: "Is Zoid available for corporate use?",
+            question: "What is the best exchange rate for converting crypto to fiat?",
             answer: (
                 <p>
-                    Yes, Zoid can be adapted for corporate environments, providing access
-                    control, emergency support, and more to help manage large estates and
-                    office complexes.
+                    Exchange rates fluctuate across platforms.
+                    Checking multiple exchanges, such as Binance, Kraken, and Coinbase, helps you find the best rate.  
                 </p>
             ),
         },
         {
-            question: "How does Zoid enhance my security?",
+            question: "How long does it take to process a crypto-to-fiat conversion?",
             answer: (
                 <p>
-                    Zoid`&apos;`s security management system includes visitor control, real-time
-                    emergency support, and features like 360 URID to offer comprehensive
-                    protection for you and your family.
+                    Processing times vary based on network congestion, payment method, and platform policies. 
+                    On exchanges, it can take anywhere from a few minutes to several hours.  
                 </p>
             ),
         },
         {
-            question: "What is the 360 URID feature?",
+            question: "Can I exchange one cryptocurrency for another?",
             answer: (
                 <p>
-                    The 360 URID is an advanced feature providing all-around surveillance
-                    and response integration for enhanced safety and convenience within
-                    Zoid-enabled communities.
+                    Yes, crypto-to-crypto exchanges allow you to swap one cryptocurrency for another.
+                    This can be done on platforms like Binance, Uniswap, or KuCoin.  
                 </p>
             ),
         },
         {
-            question: "What kind of support does Zoid offer in emergencies?",
+            question: "How can I protect myself from crypto scams?",
             answer: (
                 <p>
-                    Zoid offers real-time emergency support, connecting residents with
-                    local emergency services and providing on-platform alerts for quick
-                    response in urgent situations.
+                    Avoid suspicious links, double-check website URLs, 
+                    enable two-factor authentication (2FA), and never share your private keys. Only use reputable exchanges and wallets.  
                 </p>
             ),
         },
         {
-            question: "How do I sign up for Zoid?",
+            question: "Are my transactions private and anonymous?",
             answer: (
                 <p>
-                    You can download the Zoid app from your app store, follow the
-                    registration steps, and start using Zoid for enhanced lifestyle
-                    management.
+                    Most blockchain transactions are <em>pseudonymous</em>, meaning they don’t reveal your identity but can be traced. 
+                    Privacy coins like Monero (XMR) and Zcash (ZEC) offer more anonymity.  
                 </p>
             ),
         },
         {
-            question: "Are there fees for using Zoid?",
+            question: "What should I do if I lose access to my crypto wallet?",
             answer: (
                 <p>
-                    While some basic features may be free, premium services within the
-                    Zoidverse, such as visitor access control or real estate listings on
-                    Zest, may come with small service fees.
+                    If you lose access, recover your wallet using the <strong>recovery seed phrase</strong>. 
+                    If you lost your private keys without a backup, unfortunately, you may not be able to recover your funds.  
                 </p>
             ),
         },
         {
-            question: "How do I update my account details on Zoid?",
+            question: "How can I use cryptocurrency for online payments?",
             answer: (
                 <p>
-                    Go to the settings section in the app, where you can easily update
-                    your personal information, contact details, and preferences.
+                    Many online merchants accept cryptocurrency through payment gateways like BitPay, CoinGate, 
+                    or even direct wallet-to-wallet transfers. 
+                    Some companies issue crypto debit cards for spending crypto like cash.  
                 </p>
             ),
         },
         {
-            question: "What payment methods are accepted in Zoid?",
+            question: "What happens if a crypto transaction is delayed or stuck?",
             answer: (
                 <p>
-                    Zoid accepts multiple payment methods, including credit/debit cards,
-                    bank transfers, and mobile money, for your convenience.
+                Transactions can get stuck due to <strong>low network fees</strong>.
+                Some wallets allow you to speed up transactions by increasing fees or cancel them if not confirmed.  
                 </p>
             ),
         },
         {
-            question: "Can I cancel or change a bill payment after it's been made?",
+            question: "Can I reverse a cryptocurrency transaction?",
             answer: (
                 <p>
-                    Unfortunately, once a bill payment is processed, it cannot be
-                    canceled. Please review all information before confirming payments.
+                    No, crypto transactions are <strong>irreversible</strong> once confirmed on the blockchain. 
+                    Always verify recipient details before sending funds.  
                 </p>
             ),
         },
         {
-            question: "Is Zoid secure?",
+            question: "What are network fees, and why do I have to pay them?",
             answer: (
                 <p>
-                    Absolutely. Zoid utilizes advanced encryption and multi-factor
-                    authentication to protect user data and ensure a secure experience.
+                    Network fees (also called <strong>gas fees</strong>) are charges paid to miners or 
+                    validators for processing transactions on the blockchain. They vary depending on network congestion.  
                 </p>
             ),
         },
         {
-            question: "How do I contact Zoid customer support?",
+            question: " Do I need to pay taxes on my cryptocurrency transactions?",
             answer: (
                 <p>
-                    You can reach Zoid`&apos;`s customer support through the app by navigating to
-                    the support section or by contacting us via our official website.
+                    In many countries, crypto is taxed as <strong>capital gains or income</strong>.
+                    You may need to report gains or losses, so check with your local tax authority.  
                 </p>
             ),
         },
         {
             question:
-                "What makes Zoid unique compared to other lifestyle management apps?",
+                "How do regulations affect cryptocurrency trading and conversion?",
             answer: (
                 <p>
-                    Zoid combines secure visitor management, integrated emergency support,
-                    and a wide range of services—like shopping, bill payment, and real
-                    estate listings—all in one app, making it a comprehensive lifestyle
-                    solution.
-                </p>
+                   Regulations impact how exchanges operate, KYC (Know Your Customer) requirements, and taxation. 
+                   Some countries have <strong>strict laws</strong>, while others are more crypto-friendly. Always stay updated on your local regulations.
+                 </p>
             ),
         },
     ];
