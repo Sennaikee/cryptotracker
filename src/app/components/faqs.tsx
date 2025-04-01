@@ -3,10 +3,10 @@ import React, { useState } from "react";
 import Image from "next/image";
 
 const FaqPage = () => {
-    const [activeIndex, setActiveIndex] = useState(null);
+    const [activeIndex, setActiveIndex] = useState<number | null>(null);
     const [searchQuery, setSearchQuery] = useState("");
 
-    const toggleAccordion = (index) => {
+    const toggleAccordion = (index: number) => {
         setActiveIndex(activeIndex === index ? null : index);
     };
 
@@ -35,7 +35,7 @@ const FaqPage = () => {
             question: "What is currency comversion?",
             answer: (
                 <p>
-                    ThCurrency conversion is the process of exchanging one country’s currency 
+                    TheCurrency conversion is the process of exchanging one country&apos;s currency 
                     for another based on exchange rates. It is commonly done for travel, international trade, 
                     or investment purposes.  
                 </p>
@@ -57,7 +57,7 @@ const FaqPage = () => {
                 <p>
                     -The <strong>buy rate</strong> is the price a currency exchange service is willing to pay for your currency.  
                     - The <strong>sell rate</strong> is the price at which they will sell you a foreign currency.  
-                    The difference between the two is called the <strong>exchange spread</strong> and represents the service provider’s profit.  
+                    The difference between the two is called the <strong>exchange spread</strong> and represents the service provider&apos;s profit.  
                 </p>
             ),
         },
@@ -129,7 +129,7 @@ const FaqPage = () => {
             question: "Are my transactions private and anonymous?",
             answer: (
                 <p>
-                    Most blockchain transactions are <em>pseudonymous</em>, meaning they don’t reveal your identity but can be traced. 
+                    Most blockchain transactions are <em>pseudonymous</em>, meaning they don&apos;t reveal your identity but can be traced. 
                     Privacy coins like Monero (XMR) and Zcash (ZEC) offer more anonymity.  
                 </p>
             ),
@@ -203,10 +203,26 @@ const FaqPage = () => {
 
     const filteredData = data.filter(({ question, answer }) => {
         const lowerCaseQuery = searchQuery.toLowerCase();
-        return (
-            question.toLowerCase().includes(lowerCaseQuery) ||
-            answer.props.children.toLowerCase().includes(lowerCaseQuery)
-        );
+        
+        // Check if the question contains the search query
+        const questionMatch = question.toLowerCase().includes(lowerCaseQuery);
+        
+        // Extract text content from answer
+        let answerText = '';
+        if (answer.props.children) {
+            if (typeof answer.props.children === 'string') {
+                answerText = answer.props.children;
+            } else if (Array.isArray(answer.props.children)) {
+                answerText = answer.props.children
+                    .map(child => typeof child === 'string' ? child : '')
+                    .join(' ');
+            }
+        }
+        
+        // Check if the answer contains the search query
+        const answerMatch = answerText.toLowerCase().includes(lowerCaseQuery);
+        
+        return questionMatch || answerMatch;
     });
 
     return (
