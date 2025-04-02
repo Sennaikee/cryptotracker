@@ -2,49 +2,75 @@ import { NextResponse } from "next/server";
 
 export async function POST(request: Request) {
   try {
-    // Get request body
-    const apiKey = process.env.API_KEY;
+    // Validate request
     const body = await request.json();
-    const { type, from, to, amount } = body;
-    let endPoint = "";
+    const { from, to, amount, type } = body;
 
-    if (type === "asset-to-currency") {
-      // For crypto to fiat, we need to use the lowercase currency code
-      endPoint = `https://api.coingecko.com/api/v3/simple/price?ids=${from}&vs_currencies=${to.toLowerCase()}&include_market_cap=false&include_24hr_vol=false&include_24hr_change=false&include_last_updated_at=false&precision=2&x_cg_demo_api_key=${apiKey}`;
-    } else {
-      // For fiat to crypto, we need to use the lowercase currency code
-      endPoint = `https://api.coingecko.com/api/v3/simple/price?ids=${to}&vs_currencies=${from.toLowerCase()}&x_cg_demo_api_key=${apiKey}`;
+    if (!from || !to || amount === undefined || !type) {
+      return NextResponse.json(
+        { error: "Missing required fields: from, to, amount, or type" },
+        { status: 400 }
+      );
     }
 
-    const response = await fetch(endPoint);
+    // Build the API URL based on conversion type
+    let apiUrl: string;
+    if (type === "asset-to-currency") {
+      apiUrl = `https://api.coingecko.com/api/v3/simple/price?ids=${from}&vs_currencies=${to}`;
+    } else {
+      apiUrl = `https://api.coingecko.com/api/v3/simple/price?ids=${to}&vs_currencies=${from}`;
+    }
+
+    // Fetch conversion rate
+    const response = await fetch(apiUrl);
     if (!response.ok) {
-      throw new Error(`API responded with status: ${response.status}`);
+      throw new Error(`CoinGecko API error: ${response.statusText}`);
     }
 
     const data = await response.json();
 
+    // Get the conversion rate
+    let rate: number | undefined;
     if (type === "asset-to-currency") {
-      // Access the correct property using lowercase currency code
-      const rate = data[from]?.[to.toLowerCase()];
-      if (!rate) {
-        throw new Error("Could not find conversion rate");
-      }
-      const result = rate * amount;
-      return NextResponse.json({ result });
+      rate = data[from]?.[to.toLowerCase()];
     } else {
-      // Access the correct property using lowercase currency code
-      const rate = data[to]?.[from.toLowerCase()];
-      if (!rate) {
-        throw new Error("Could not find conversion rate");
-      }
-      const result = amount / rate;
-      console.log("result", result);
-      return NextResponse.json({ result });
+      rate = data[to]?.[from.toLowerCase()];
+      if (rate) rate = 1 / rate; // Invert for currency-to-asset
     }
+
+    if (!rate) {
+      // Provide detailed error about which coin/currency failed
+      const direction =
+        type === "asset-to-currency" ? `${from} to ${to}` : `${to} to ${from}`;
+      return NextResponse.json(
+        {
+          error: `Could not find conversion rate for ${direction}`,
+          suggestion: "Verify the coin/currency symbols are correct",
+          debug: {
+            apiUrl,
+            responseData: data,
+          },
+        },
+        { status: 400 }
+      );
+    }
+
+    // Calculate result
+    const result = type === "asset-to-currency" ? amount * rate : amount / rate;
+
+    return NextResponse.json({
+      result: parseFloat(result.toFixed(6)),
+      rate: parseFloat(rate.toFixed(6)),
+      from,
+      to,
+    });
   } catch (error) {
     console.error("Conversion error:", error);
     return NextResponse.json(
-      { error: error instanceof Error ? error.message : "Conversion failed" },
+      {
+        error: "Conversion failed",
+        details: error instanceof Error ? error.message : "Unknown error",
+      },
       { status: 500 }
     );
   }
