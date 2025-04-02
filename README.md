@@ -11,6 +11,9 @@ git clone https://github.com/QuadlcorE/cryptotracker.git
 Create a .env.local file and add your [CoinGecko API key](https://www.coingecko.com/en/api/pricing) in the following format:
 ```bash
 API_KEY=CG-Yyb...Dhg
+EMAIL_USER=your-email@gmail.com
+EMAIL_PASSWORD=your-app-specific-password
+SUPPORT_EMAIL=support@yourdomain.com
 ```
 
 Then install the dependencies and run the development server. This project uses pnpm as the package manager:

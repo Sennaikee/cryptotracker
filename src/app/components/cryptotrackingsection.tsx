@@ -1,7 +1,7 @@
 "use client";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import TopCrypto from "./topcrypto";
-import NFTCoins from "./nftcoins"; // You'll need to create these components
+import NFTCoins from "./nftcoins";
 import DeFiCoins from "./deficoins";
 import YieldFarming from "./yeildfarming";
 
