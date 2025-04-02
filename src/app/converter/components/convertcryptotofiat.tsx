@@ -46,11 +46,14 @@ export default function ConvertCryptoToFiat() {
         const cryptoData = await cryptoResponse.json();
         const currenciesData = await currenciesResponse.json();
 
-        if (!Array.isArray(cryptoData)) {
-          throw new Error("Invalid crypto data format received");
+        console.log("Fetched Crypto Data:", cryptoData);
+        console.log("Fetched Currencies Data:", currenciesData);
+
+        if (!Array.isArray(cryptoData) || cryptoData.length === 0) {
+          throw new Error("Invalid or empty crypto data received");
         }
-        if (!Array.isArray(currenciesData)) {
-          throw new Error("Invalid currencies data format received");
+        if (!Array.isArray(currenciesData) || currenciesData.length === 0) {
+          throw new Error("Invalid or empty currencies data received");
         }
 
         setSupportedCrypto(cryptoData);
@@ -68,60 +71,53 @@ export default function ConvertCryptoToFiat() {
     fetchData();
   }, []);
 
+
   const handleConvert = async () => {
     if (!fromType || !toType || !amount) {
+      console.warn("Missing conversion parameters:", {
+        fromType,
+        toType,
+        amount,
+      });
       return;
     }
 
-    let fromRate, toRate;
+    console.log("Sending Conversion Request:", {
+      type: conversionType,
+      from: fromType,
+      to: toType,
+      amount: Number(amount),
+    });
 
-    if (conversionType === "asset-to-currency") {
-      try {
-        const response = await fetch("/api/convertcryptotofiat", {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({
-            type: "asset-to-currency",
-            from: fromType,
-            to: toType,
-            amount: Number(amount),
-          }),
-        });
-        const data = await response.json();
-        setResult(data.result);
-      } catch (err) {
-        console.error(err);
-        setError("Conversion failed");
-      }
-    } else {
-      try {
-        const response = await fetch("/api/convertcryptotofiat", {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({
-            type: "currency-to-asset",
-            from: fromType,
-            to: toType,
-            amount: Number(amount),
-          }),
-        });
-        const data = await response.json();
-        setResult(data.result);
-      } catch (err) {
-        console.error(err);
-        setError("Conversion failed");
-      }
-    }
+    try {
+      const response = await fetch("/api/convertcryptotofiat", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          type: conversionType,
+          from: fromType,
+          to: toType,
+          amount: Number(amount),
+        }),
+      });
 
-    if (fromRate && toRate) {
-      const conversion = (Number.parseFloat(amount) * toRate) / fromRate;
-      setResult(conversion);
+      const data = await response.json();
+      console.log("Received Conversion Response:", data);
+
+      if (!data.result) {
+        console.error("Conversion failed, invalid response:", data);
+        setError("Conversion failed. Please check input values.");
+      } else {
+        setResult(data.result);
+      }
+    } catch (err) {
+      console.error("Error during conversion:", err);
+      setError("Conversion failed due to a network or API issue.");
     }
   };
+
 
   const handleSwap = () => {
     // Store current values before swapping
@@ -202,7 +198,10 @@ export default function ConvertCryptoToFiat() {
             <SearchableSelect
               value={fromType}
               onValueChange={setFromType}
-              items={supportedCrypto}
+              items={supportedCrypto.map((coin: ApiResponseItem) => ({
+                value: coin.id, // use id as the value
+                label: `${coin.symbol.toUpperCase()} - ${coin.name}`, // display format
+              }))}
               placeholder="Select coin"
             />
           ) : (
@@ -228,7 +227,10 @@ export default function ConvertCryptoToFiat() {
             <SearchableSelect
               value={toType}
               onValueChange={setToType}
-              items={supportedCrypto}
+              items={supportedCrypto.map((coin: ApiResponseItem) => ({
+                value: coin.id, // use id as the value
+                label: `${coin.symbol.toUpperCase()} - ${coin.name}`, // display format
+              }))}
               placeholder="Select coin"
             />
           ) : (

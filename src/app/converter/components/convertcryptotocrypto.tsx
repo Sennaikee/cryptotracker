@@ -7,15 +7,16 @@ import SearchableSelect from "./searchableselect";
 import { ApiResponseItem } from "@/types/api";
 
 export default function ConvertCryptoToCrypto() {
-  const [amount, setAmount] = React.useState("0.00");
+  const [amount, setAmount] = React.useState("1.00"); // Changed default from "0.00" to "1.00"
   const [fromCrypto, setFromCrypto] = React.useState<string>("");
   const [toCrypto, setToCrypto] = React.useState<string>("");
   const [supportedCrypto, setSupportedCrypto] = React.useState<
-    Array<ApiResponseItem>
+    ApiResponseItem[]
   >([]);
   const [result, setResult] = React.useState<number | null>(null);
   const [isLoading, setIsLoading] = React.useState(true);
   const [error, setError] = React.useState<string | null>(null);
+  const [isConverting, setIsConverting] = React.useState(false); // Added loading state for conversion
 
   React.useEffect(() => {
     const fetchData = async () => {
@@ -23,6 +24,9 @@ export default function ConvertCryptoToCrypto() {
       setError(null);
       try {
         const response = await fetch("/api/supported-coins");
+        if (!response.ok) {
+          throw new Error(`API request failed with status ${response.status}`);
+        }
         const data = await response.json();
         if (!Array.isArray(data)) {
           throw new Error("Invalid crypto data format received");
@@ -33,6 +37,7 @@ export default function ConvertCryptoToCrypto() {
         setError(
           err instanceof Error ? err.message : "Failed to load conversion data"
         );
+        // Consider setting some fallback data here if available
       } finally {
         setIsLoading(false);
       }
@@ -42,9 +47,13 @@ export default function ConvertCryptoToCrypto() {
   }, []);
 
   const handleConvert = async () => {
-    if (!fromCrypto || !toCrypto || !amount) {
+    if (!fromCrypto || !toCrypto || !amount || Number(amount) <= 0) {
+      setError("Please select both currencies and enter a valid amount");
       return;
     }
+
+    setIsConverting(true);
+    setError(null);
 
     try {
       const response = await fetch("/api/convertcryptotocrypto", {
@@ -58,11 +67,22 @@ export default function ConvertCryptoToCrypto() {
           amount: Number(amount),
         }),
       });
+
+      if (!response.ok) {
+        const errorData = await response.json().catch(() => ({}));
+        throw new Error(errorData.error || "Conversion failed");
+      }
+
       const data = await response.json();
+      if (data.result === undefined) {
+        throw new Error("Invalid response format");
+      }
       setResult(data.result);
     } catch (err) {
       console.error("Conversion error:", err);
-      setError("Conversion failed");
+      setError(err instanceof Error ? err.message : "Conversion failed");
+    } finally {
+      setIsConverting(false);
     }
   };
 
@@ -76,7 +96,16 @@ export default function ConvertCryptoToCrypto() {
 
   if (error) {
     return (
-      <div className="w-full max-w-md mx-auto p-6 text-red-500">{error}</div>
+      <div className="w-full max-w-md mx-auto p-6 text-red-500">
+        {error}
+        <Button
+          variant="link"
+          className="text-blue-400 ml-2"
+          onClick={() => window.location.reload()}
+        >
+          Retry
+        </Button>
+      </div>
     );
   }
 
@@ -93,8 +122,8 @@ export default function ConvertCryptoToCrypto() {
             {result.toFixed(6)} {toCrypto}
           </div>
           <div className="text-xs text-gray-400 mt-1">
-            {Number.parseFloat(amount).toFixed(6)} {fromCrypto} =
-            {result.toFixed(6)} {toCrypto}
+            {Number(amount).toFixed(6)} {fromCrypto} = {result.toFixed(6)}{" "}
+            {toCrypto}
           </div>
         </div>
       )}
@@ -103,8 +132,15 @@ export default function ConvertCryptoToCrypto() {
         <Input
           type="number"
           value={amount}
-          min={0}
-          onChange={(e) => setAmount(e.target.value)}
+          min="0.000001"
+          step="any"
+          onChange={(e) => {
+            const value = e.target.value;
+            if (/^\d*\.?\d*$/.test(value)) {
+              // Validate number format
+              setAmount(value);
+            }
+          }}
           className="bg-[#1C1F26] border-[#2A2D34] text-white"
         />
 
@@ -113,7 +149,10 @@ export default function ConvertCryptoToCrypto() {
           <SearchableSelect
             value={fromCrypto}
             onValueChange={setFromCrypto}
-            items={supportedCrypto}
+            items={supportedCrypto.map((coin) => ({
+              value: coin.id,
+              label: `${coin.symbol.toUpperCase()} - ${coin.name}`,
+            }))}
             placeholder="Select coin"
           />
         </div>
@@ -123,7 +162,10 @@ export default function ConvertCryptoToCrypto() {
           <SearchableSelect
             value={toCrypto}
             onValueChange={setToCrypto}
-            items={supportedCrypto}
+            items={supportedCrypto.map((coin) => ({
+              value: coin.id,
+              label: `${coin.symbol.toUpperCase()} - ${coin.name}`,
+            }))}
             placeholder="Select coin"
           />
         </div>
@@ -134,10 +176,11 @@ export default function ConvertCryptoToCrypto() {
           variant="secondary"
           className="bg-[#2A2D34] text-white hover:bg-[#3A3D44]"
           onClick={() => {
-            setAmount("0.00");
+            setAmount("1.00");
             setFromCrypto("");
             setToCrypto("");
             setResult(null);
+            setError(null);
           }}
         >
           Cancel
@@ -145,8 +188,9 @@ export default function ConvertCryptoToCrypto() {
         <Button
           className="bg-[#0066FF] hover:bg-[#0052CC]"
           onClick={handleConvert}
+          disabled={isConverting || !fromCrypto || !toCrypto || !amount}
         >
-          Convert
+          {isConverting ? "Converting..." : "Convert"}
         </Button>
       </div>
     </div>

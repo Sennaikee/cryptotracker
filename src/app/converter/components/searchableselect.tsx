@@ -12,15 +12,15 @@ import {
   PopoverTrigger,
   PopoverContent,
 } from "@radix-ui/react-popover";
-
 import React from "react";
 import { useVirtualizer } from "@tanstack/react-virtual";
+import { SelectOption } from "@/types/api";
 
 interface SearchableSelectProps {
+  items: SelectOption[];
   value: string;
   onValueChange: (value: string) => void;
-  items: Array<{ id: string; symbol: string; name: string }>;
-  placeholder: string;
+  placeholder?: string;
 }
 
 export default function SearchableSelect({
@@ -29,25 +29,24 @@ export default function SearchableSelect({
   items,
   placeholder,
 }: SearchableSelectProps) {
-  // Add memoization for search filtering
   const [search, setSearch] = React.useState("");
+  const [open, setOpen] = React.useState(false);
+  const parentRef = React.useRef(null);
 
+  // Filter items based on search term (search in both value and label)
   const filteredItems = React.useMemo(
     () =>
       items.filter(
         (item) =>
-          item.name.toLowerCase().includes(search.toLowerCase()) ||
-          item.symbol.toLowerCase().includes(search.toLowerCase())
+          item.value.toLowerCase().includes(search.toLowerCase()) ||
+          item.label.toLowerCase().includes(search.toLowerCase())
       ),
     [items, search]
   );
 
-  const [open, setOpen] = React.useState(false);
-  const parentRef = React.useRef(null);
-
   const virtualizer = useVirtualizer({
     count: filteredItems.length,
-    getItemKey: (index) => filteredItems[index].id,
+    getItemKey: (index) => filteredItems[index].value, // Use value as key
     estimateSize: () => 32,
     overscan: 5,
     getScrollElement: () => parentRef.current,
@@ -68,41 +67,40 @@ export default function SearchableSelect({
           className="w-full justify-between bg-[#1C1F26] border-[#2A2D34] text-white hover:bg-[#2A2D34] hover:text-white"
         >
           {value
-            ? items?.find((item) => item.id === value)?.symbol.toUpperCase() +
-              " " +
-              items?.find((item) => item.id === value)?.name
+            ? items.find((item) => item.value === value)?.label || placeholder
             : placeholder}
         </Button>
       </PopoverTrigger>
-      <PopoverContent>
+      <PopoverContent className="w-[var(--radix-popover-trigger-width)]">
         <Command shouldFilter={false}>
-          {/* Disable built-in filtering */}
           <CommandInput
-            placeholder={`Search ${placeholder.toLowerCase()}...`}
+            placeholder={`Search ${placeholder?.toLowerCase() || "items"}...`}
             value={search}
             onValueChange={setSearch}
           />
           <CommandList>
-            <CommandEmpty>No item found.</CommandEmpty>
+            <CommandEmpty>No items found.</CommandEmpty>
             <CommandGroup
               ref={parentRef}
-              className="h-[300px] overflow-y-auto w-[400px]"
+              className="h-[300px] overflow-y-auto w-full"
             >
-              {virtualizer.getVirtualItems().map((virtualItem) => (
-                <CommandItem
-                  key={filteredItems[virtualItem.index].id}
-                  value={filteredItems[virtualItem.index].name}
-                  onSelect={() => {
-                    onValueChange(filteredItems[virtualItem.index].id);
-                    setSearch(""); // Reset search after selection
-                    setOpen(false);
-                  }}
-                  className="cursor-pointer"
-                >
-                  {filteredItems[virtualItem.index].symbol.toUpperCase()}{" "}
-                  {filteredItems[virtualItem.index].name}
-                </CommandItem>
-              ))}
+              {virtualizer.getVirtualItems().map((virtualItem) => {
+                const item = filteredItems[virtualItem.index];
+                return (
+                  <CommandItem
+                    key={item.value}
+                    value={item.value}
+                    onSelect={() => {
+                      onValueChange(item.value);
+                      setSearch("");
+                      setOpen(false);
+                    }}
+                    className="cursor-pointer"
+                  >
+                    {item.label}
+                  </CommandItem>
+                );
+              })}
             </CommandGroup>
           </CommandList>
         </Command>
